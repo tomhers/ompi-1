@@ -549,6 +549,8 @@ BEGIN_C_DECLS
 #define OPAL_PMIX_SETUP_APP_NONENVARS           "pmix.setup.nenv"       // (bool) include all non-envar data
 #define OPAL_PMIX_SETUP_APP_ALL                 "pmix.setup.all"        // (bool) include all relevant data
 
+#define OPAL_PMIX_GROUP_ASSIGN_CONTEXT_ID        "pmix.grp.actxid"      // (bool) request that the RM assign a unique numerical (size_t) ID to this group
+#define OPAL_PMIX_GROUP_CONTEXT_ID               "pmix.grp.ctxid"       // (size_t) context ID assigned to group
 
 /* define a scope for data "put" by PMI per the following:
  *

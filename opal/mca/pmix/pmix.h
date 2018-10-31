@@ -905,6 +905,11 @@ typedef int (*opal_pmix_base_register_cleanup_fn_t)(char *path, bool directory, 
 
 typedef bool (*opal_pmix_base_legacy_get_fn_t)(void);
 
+typedef int (*opal_pmix_base_group_construct_fn_t)(const char *tag, const opal_process_name_t *procs, size_t nprocs,
+                                                       opal_list_t *info, opal_list_t *info_out);
+
+typedef int (*opal_pmix_base_group_destruct_fn_t)(const char *tag, opal_list_t *info);
+
 /*
  * the standard public API data structure
  */
@@ -941,6 +946,8 @@ typedef struct {
     opal_pmix_base_job_control_fn_t                         job_control;
     opal_pmix_base_process_monitor_fn_t                     monitor;
     opal_pmix_base_register_cleanup_fn_t                    register_cleanup;
+    opal_pmix_base_group_construct_fn_t                     group_construct;
+    opal_pmix_base_group_destruct_fn_t                      group_destruct;
     /* server APIs */
     opal_pmix_base_module_server_init_fn_t                  server_init;
     opal_pmix_base_module_server_finalize_fn_t              server_finalize;

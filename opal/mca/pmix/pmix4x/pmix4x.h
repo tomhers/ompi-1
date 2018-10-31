@@ -308,6 +308,10 @@ OPAL_MODULE_DECLSPEC int pmix4x_server_setup_local_support(opal_jobid_t jobid,
                                                            opal_list_t *info,
                                                            opal_pmix_op_cbfunc_t cbfunc, void *cbdata);
 
+OPAL_MODULE_DECLSPEC int pmix4x_group_construct (const char *tag, const opal_process_name_t *procs,
+                                                 size_t nprocs, opal_list_t *info, opal_list_t *info_out);
+OPAL_MODULE_DECLSPEC int pmix4x_group_destruct (const char *tag, opal_list_t *info);
+
 /****  COMPONENT UTILITY FUNCTIONS  ****/
 OPAL_MODULE_DECLSPEC int opal_pmix_pmix4x_check_evars(void);
 

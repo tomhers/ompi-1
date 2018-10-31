@@ -1670,3 +1670,91 @@ int pmix4x_job_control(opal_list_t *targets,
     }
     return pmix4x_convert_rc(rc);
 }
+
+static void pmix4x_info_create (opal_list_t *info, pmix_info_t **pinfo, size_t *pinfo_sz)
+{
+    size_t sz = (NULL == info) ? 0 : opal_list_get_size(info), n;
+    opal_value_t *value;
+
+    *pinfo_sz = sz;
+
+    if (0 == sz) {
+        return;
+    }
+
+    PMIX_INFO_CREATE(*pinfo, sz);
+    n=0;
+    OPAL_LIST_FOREACH(value, info, opal_value_t) {
+        (void)strncpy((*pinfo)[n].key, value->key, PMIX_MAX_KEYLEN);
+        pmix4x_value_load(&(*pinfo)[n].value, value);
+        ++n;
+    }
+}
+
+int pmix4x_group_construct (const char *tag, const opal_process_name_t *procs, size_t nprocs,
+                           opal_list_t *info, opal_list_t *info_out)
+{
+    pmix_info_t *pinfo = NULL, *results = NULL;
+    pmix_proc_t *pprocs = NULL;
+    size_t sz, nresults;
+    pmix_status_t rc;
+    char *nsptr;
+
+    OPAL_PMIX_ACQUIRE_THREAD(&opal_pmix_base.lock);
+    if (0 >= opal_pmix_base.initialized) {
+        OPAL_PMIX_RELEASE_THREAD(&opal_pmix_base.lock);
+        return OPAL_ERR_NOT_INITIALIZED;
+    }
+
+    PMIX_PROC_CREATE(pprocs, nprocs);
+    for (size_t i = 0 ; i < nprocs ; ++i) {
+        if (NULL == (nsptr = pmix4x_convert_jobid(procs[i].jobid))) {
+            OPAL_PMIX_RELEASE_THREAD(&opal_pmix_base.lock);
+            return OPAL_ERR_NOT_FOUND;
+        }
+        (void)strncpy(pprocs[i].nspace, nsptr, PMIX_MAX_NSLEN);
+        pprocs[i].rank = pmix4x_convert_opalrank(procs[i].vpid);
+    }
+    OPAL_PMIX_RELEASE_THREAD(&opal_pmix_base.lock);
+
+    pmix4x_info_create (info, &pinfo, &sz);
+
+    rc = PMIx_Group_construct(tag, pprocs, nprocs, pinfo, sz, &results, &nresults);
+    PMIX_INFO_FREE(pinfo, sz);
+    if (PMIX_SUCCESS == rc) {
+        if (info_out) {
+            for (size_t i = 0 ; i < nresults ; ++i) {
+                opal_value_t *value = OBJ_NEW(opal_value_t);
+                value->key = strdup (results[i].key);
+                pmix4x_value_unload(value, &results[i].value);
+                opal_list_append (info_out, &value->super);
+            }
+        }
+        if (NULL != results) {
+            PMIX_INFO_FREE(results, nresults);
+        }
+    }
+
+    return pmix4x_convert_rc(rc);
+}
+
+int pmix4x_group_destruct (const char *tag, opal_list_t *info)
+{
+    pmix_info_t *pinfo = NULL;
+    pmix_status_t rc;
+    size_t sz = 0;
+
+    OPAL_PMIX_ACQUIRE_THREAD(&opal_pmix_base.lock);
+    if (0 >= opal_pmix_base.initialized) {
+        OPAL_PMIX_RELEASE_THREAD(&opal_pmix_base.lock);
+        return OPAL_ERR_NOT_INITIALIZED;
+    }
+    OPAL_PMIX_RELEASE_THREAD(&opal_pmix_base.lock);
+
+    pmix4x_info_create (info, &pinfo, &sz);
+
+    rc = PMIx_Group_destruct (tag, pinfo, sz);
+    PMIX_INFO_FREE(pinfo, sz);
+
+    return pmix4x_convert_rc(rc);
+}

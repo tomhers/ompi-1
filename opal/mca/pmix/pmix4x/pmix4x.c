@@ -108,6 +108,8 @@ const opal_pmix_base_module_t opal_pmix_pmix4x_module = {
     .allocate = pmix4x_allocate,
     .job_control = pmix4x_job_control,
     .register_cleanup = pmix4x_register_cleanup,
+    .group_construct = pmix4x_group_construct,
+    .group_destruct = pmix4x_group_destruct,
     /* server APIs */
     .server_init = pmix4x_server_init,
     .server_finalize = pmix4x_server_finalize,
