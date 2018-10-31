@@ -96,7 +96,7 @@ static int ompi_osc_pt2pt_dt_send_complete (ompi_request_t *request)
 
     OPAL_THREAD_LOCK(&mca_osc_pt2pt_component.lock);
     (void) opal_hash_table_get_value_uint32(&mca_osc_pt2pt_component.modules,
-                                            ompi_comm_get_cid(request->req_mpi_object.comm),
+                                            ompi_comm_get_local_cid(request->req_mpi_object.comm),
                                             (void **) &module);
     OPAL_THREAD_UNLOCK(&mca_osc_pt2pt_component.lock);
     assert (NULL != module);

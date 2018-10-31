@@ -53,8 +53,8 @@ int ompi_osc_pt2pt_free(ompi_win_t *win)
 
     if (NULL != module->comm) {
         opal_output_verbose(1, ompi_osc_base_framework.framework_output,
-                            "pt2pt component destroying window with id %d",
-                            ompi_comm_get_cid(module->comm));
+                            "pt2pt component destroying window with id %s",
+                            ompi_comm_print_cid(module->comm));
 
         /* finish with a barrier */
         if (ompi_group_size(win->w_group) > 1) {
@@ -65,7 +65,7 @@ int ompi_osc_pt2pt_free(ompi_win_t *win)
         /* remove from component information */
         OPAL_THREAD_SCOPED_LOCK(&mca_osc_pt2pt_component.lock,
                                 opal_hash_table_remove_value_uint32(&mca_osc_pt2pt_component.modules,
-                                                                    ompi_comm_get_cid(module->comm)));
+                                                                    ompi_comm_get_local_cid(module->comm)));
     }
 
     win->w_osc_module = NULL;

@@ -376,8 +376,8 @@ component_select(struct ompi_win_t *win, void **base, size_t size, int disp_unit
     if (OMPI_SUCCESS != ret) goto cleanup;
 
     OPAL_OUTPUT_VERBOSE((10, ompi_osc_base_framework.framework_output,
-                         "pt2pt component creating window with id %d",
-                         ompi_comm_get_cid(module->comm)));
+                         "pt2pt component creating window with id %s",
+                         ompi_comm_print_cid(module->comm)));
 
     /* record my displacement unit.  Always resolved at target */
     module->disp_unit = disp_unit;
@@ -405,7 +405,7 @@ component_select(struct ompi_win_t *win, void **base, size_t size, int disp_unit
     /* update component data */
     OPAL_THREAD_LOCK(&mca_osc_pt2pt_component.lock);
     ret = opal_hash_table_set_value_uint32(&mca_osc_pt2pt_component.modules,
-                                           ompi_comm_get_cid(module->comm),
+                                           ompi_comm_get_local_cid(module->comm),
                                            module);
     OPAL_THREAD_UNLOCK(&mca_osc_pt2pt_component.lock);
     if (OMPI_SUCCESS != ret) goto cleanup;
@@ -413,7 +413,7 @@ component_select(struct ompi_win_t *win, void **base, size_t size, int disp_unit
     /* fill in window information */
     *model = MPI_WIN_UNIFIED;
     win->w_osc_module = (ompi_osc_base_module_t*) module;
-    opal_asprintf(&name, "pt2pt window %d", ompi_comm_get_cid(module->comm));
+    opal_asprintf(&name, "pt2pt window %s", ompi_comm_print_cid(module->comm));
     ompi_win_set_name(win, name);
     free(name);
 
@@ -441,7 +441,7 @@ component_select(struct ompi_win_t *win, void **base, size_t size, int disp_unit
     }
 
     OPAL_OUTPUT_VERBOSE((10, ompi_osc_base_framework.framework_output,
-                         "done creating pt2pt window %d", ompi_comm_get_cid(module->comm)));
+                         "done creating pt2pt window %s", ompi_comm_print_cid(module->comm)));
 
     return OMPI_SUCCESS;
 

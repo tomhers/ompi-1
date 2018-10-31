@@ -218,46 +218,22 @@ static void mca_pml_ob1_put_completion (mca_pml_ob1_rdma_frag_t *frag, int64_t r
     MCA_PML_OB1_PROGRESS_PENDING(bml_btl);
 }
 
+static inline int mca_pml_ob1_recv_request_ack_send (ompi_proc_t* proc, uint64_t hdr_src_req, void *hdr_dst_req,
+                                                     uint64_t hdr_send_offset, uint64_t size, bool nordma)
+{
+    mca_pml_ob1_ack_hdr_t ack;
+
+    mca_pml_ob1_ack_hdr_prepare (&ack, nordma ? MCA_PML_OB1_HDR_FLAGS_NORDMA : 0,
+                                 hdr_src_req, hdr_dst_req, hdr_send_offset, size);
+    ob1_hdr_hton(&ack, MCA_PML_OB1_HDR_TYPE_ACK, proc);
+
+    return mca_pml_ob1_send_control_any (proc, MCA_BTL_NO_ORDER, (mca_pml_ob1_hdr_t *) &ack,
+                                         sizeof (ack), true);
+}
+
 /*
  *
  */
-
-int mca_pml_ob1_recv_request_ack_send_btl(
-        ompi_proc_t* proc, mca_bml_base_btl_t* bml_btl,
-        uint64_t hdr_src_req, void *hdr_dst_req, uint64_t hdr_send_offset,
-        uint64_t size, bool nordma)
-{
-    mca_btl_base_descriptor_t* des;
-    mca_pml_ob1_ack_hdr_t* ack;
-    int rc;
-
-    /* allocate descriptor */
-    mca_bml_base_alloc(bml_btl, &des, MCA_BTL_NO_ORDER,
-                       sizeof(mca_pml_ob1_ack_hdr_t),
-                       MCA_BTL_DES_FLAGS_PRIORITY | MCA_BTL_DES_FLAGS_BTL_OWNERSHIP |
-                       MCA_BTL_DES_SEND_ALWAYS_CALLBACK | MCA_BTL_DES_FLAGS_SIGNAL);
-    if( OPAL_UNLIKELY(NULL == des) ) {
-        return OMPI_ERR_OUT_OF_RESOURCE;
-    }
-
-    /* fill out header */
-    ack = (mca_pml_ob1_ack_hdr_t*)des->des_segments->seg_addr.pval;
-    mca_pml_ob1_ack_hdr_prepare (ack, nordma ? MCA_PML_OB1_HDR_FLAGS_NORDMA : 0,
-                                 hdr_src_req, hdr_dst_req, hdr_send_offset, size);
-
-    ob1_hdr_hton(ack, MCA_PML_OB1_HDR_TYPE_ACK, proc);
-
-    /* initialize descriptor */
-    des->des_cbfunc = mca_pml_ob1_recv_ctl_completion;
-
-    rc = mca_bml_base_send(bml_btl, des, MCA_PML_OB1_HDR_TYPE_ACK);
-    SPC_RECORD(OMPI_SPC_BYTES_RECEIVED_MPI, (ompi_spc_value_t)size);
-    if( OPAL_LIKELY( rc >= 0 ) ) {
-        return OMPI_SUCCESS;
-    }
-    mca_bml_base_free(bml_btl, des);
-    return OMPI_ERR_OUT_OF_RESOURCE;
-}
 
 static int mca_pml_ob1_recv_request_ack(
     mca_pml_ob1_recv_request_t* recvreq,
@@ -1153,8 +1129,8 @@ recv_req_match_wild( mca_pml_ob1_recv_request_t* req,
                      mca_pml_ob1_comm_proc_t **p)
 #endif
 {
-    mca_pml_ob1_comm_t* comm = req->req_recv.req_base.req_comm->c_pml_comm;
-    mca_pml_ob1_comm_proc_t **procp = comm->procs;
+    mca_pml_ob1_comm_t *comm = (mca_pml_ob1_comm_t *) req->req_recv.req_base.req_comm->c_pml_comm;
+    mca_pml_ob1_comm_proc_t **procp = (mca_pml_ob1_comm_proc_t **) comm->procs;
 
 #if MCA_PML_OB1_CUSTOM_MATCH
     mca_pml_ob1_recv_frag_t* frag;
