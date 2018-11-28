@@ -1,4 +1,4 @@
-/* -*- Mode: C; c-basic-offset:4 ; -*- */
+/* -*- Mode: C; c-basic-offset:4 ; indent-tabs-mode:nil -*- */
 /*
  * Copyright (c) 2004-2010 The Trustees of Indiana University and Indiana
  *                         University Research and Technology
@@ -14,7 +14,11 @@
  *                         reserved.
  * Copyright (c) 2013-2020 Intel, Inc.  All rights reserved.
  * Copyright (c) 2015 Cisco Systems, Inc.  All rights reserved.
+<<<<<<< 6489eb2fb970db854de9a0517c97d60231e17587
  * Copyright (c) 2020      Amazon.com, Inc. or its affiliates.  All Rights
+=======
+ * Copyright (c) 2018      Triad National Security, LLC. All rights
+>>>>>>> WIP: more sessions stuff
  *                         reserved.
  * $COPYRIGHT$
  *
@@ -37,14 +41,27 @@
 #include "opal/mca/pmix/pmix-internal.h"
 
 #include "ompi/constants.h"
+#include "ompi/instance/instance.h"
 #include "ompi/mca/pml/pml.h"
 #include "ompi/mca/pml/base/base.h"
+#include "ompi/mca/rte/rte.h"
 #include "ompi/proc/proc.h"
 
 typedef struct opened_component_t {
   opal_list_item_t super;
   mca_pml_base_component_t *om_component;
 } opened_component_t;
+
+static bool modex_reqd=false;
+
+
+static int mca_pml_base_finalize (void) {
+  if (NULL != mca_pml_base_selected_component.pmlm_finalize) {
+      return mca_pml_base_selected_component.pmlm_finalize();
+  }
+
+  return OMPI_SUCCESS;
+}
 
 /**
  * Function for selecting one component from all those that are
@@ -283,6 +300,7 @@ int mca_pml_base_select(bool enable_progress_threads,
     ret = mca_pml_base_pml_selected(best_component->pmlm_version.mca_component_name);
 
     /* All done */
+    ompi_mpi_instance_append_finalize (mca_pml_base_finalize);
 
     return ret;
 }
