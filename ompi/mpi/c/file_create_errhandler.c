@@ -40,9 +40,9 @@
 static const char FUNC_NAME[] = "MPI_File_create_errhandler";
 
 
-int MPI_File_create_errhandler(MPI_File_errhandler_function *function,
-		                        MPI_Errhandler *errhandler) {
-    int err = MPI_SUCCESS;
+int MPI_File_create_errhandler (MPI_File_errhandler_function *function,
+                                MPI_Errhandler *errhandler) {
+    int err;
 
     /* Error checking */
 
@@ -59,14 +59,9 @@ int MPI_File_create_errhandler(MPI_File_errhandler_function *function,
 
     /* Create and cache the errhandler.  Sets a refcount of 1. */
 
-    *errhandler =
-        ompi_errhandler_create(OMPI_ERRHANDLER_TYPE_FILE,
-                               (ompi_errhandler_generic_handler_fn_t*) function,
-                               OMPI_ERRHANDLER_LANG_C);
-    if (NULL == *errhandler) {
-        err = MPI_ERR_INTERN;
-    }
-
+    err = ompi_errhandler_create (OMPI_ERRHANDLER_TYPE_FILE,
+                                  (ompi_errhandler_generic_handler_fn_t*) function,
+                                  OMPI_ERRHANDLER_LANG_C, errhandler);
     OMPI_ERRHANDLER_RETURN(err, MPI_COMM_WORLD, MPI_ERR_INTERN,
                            "MPI_File_create_errhandler");
 }

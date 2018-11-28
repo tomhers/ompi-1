@@ -1,4 +1,4 @@
-/* -*- Mode: C; c-basic-offset:4 ; -*- */
+/* -*- Mode: C; c-basic-offset:4 ; indent-tabs-mode:nil -*- */
 /*
  * Copyright (c) 2004-2010 The Trustees of Indiana University and Indiana
  *                         University Research and Technology
@@ -14,6 +14,8 @@
  *                         reserved.
  * Copyright (c) 2013-2014 Intel, Inc. All rights reserved
  * Copyright (c) 2015 Cisco Systems, Inc.  All rights reserved.
+ * Copyright (c) 2018      Triad National Security, LLC. All rights
+ *                         reserved.
  * $COPYRIGHT$
  *
  * Additional copyrights may follow
@@ -35,8 +37,10 @@
 #include "opal/mca/pmix/pmix.h"
 
 #include "ompi/constants.h"
+#include "ompi/instance/instance.h"
 #include "ompi/mca/pml/pml.h"
 #include "ompi/mca/pml/base/base.h"
+#include "ompi/mca/rte/rte.h"
 #include "ompi/proc/proc.h"
 
 typedef struct opened_component_t {
@@ -45,6 +49,16 @@ typedef struct opened_component_t {
 } opened_component_t;
 
 static bool modex_reqd=false;
+
+
+static int mca_pml_base_finalize (void) {
+  if (NULL != mca_pml_base_selected_component.pmlm_finalize) {
+      return mca_pml_base_selected_component.pmlm_finalize();
+  }
+
+  return OMPI_SUCCESS;
+}
+
 
 /**
  * Function for selecting one component from all those that are
@@ -292,6 +306,7 @@ int mca_pml_base_select(bool enable_progress_threads,
     }
 
     /* All done */
+    ompi_mpi_instance_append_finalize (mca_pml_base_finalize);
 
     return OMPI_SUCCESS;
 }

@@ -43,7 +43,6 @@ int MPI_Errhandler_free(MPI_Errhandler *errhandler)
   /* Error checking */
 
   if (MPI_PARAM_CHECK) {
-    OMPI_ERR_INIT_FINALIZE(FUNC_NAME);
     /* Raise an MPI exception if we got NULL or if we got an intrinsic
        *and* the reference count is 1 (meaning that this FREE would
        actually free the underlying intrinsic object).  This is ugly
@@ -72,7 +71,7 @@ int MPI_Errhandler_free(MPI_Errhandler *errhandler)
 
      So decrease the refcount here. */
 
-  OBJ_RELEASE(*errhandler);
+  ompi_errhandler_free (*errhandler);
   *errhandler = MPI_ERRHANDLER_NULL;
 
   /* All done */

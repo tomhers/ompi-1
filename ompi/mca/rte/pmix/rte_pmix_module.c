@@ -823,6 +823,8 @@ int ompi_rte_finalize(void)
     free (pmix_process_info.cpuset);
     pmix_process_info.cpuset = NULL;
 
+    opal_finalize ();
+
     return OMPI_SUCCESS;
 }
 
