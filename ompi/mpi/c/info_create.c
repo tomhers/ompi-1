@@ -52,7 +52,6 @@ static const char FUNC_NAME[] = "MPI_Info_create";
  */
 int MPI_Info_create(MPI_Info *info)
 {
-    int rc;
     OPAL_CR_NOOP_PROGRESS();
 
     if (MPI_PARAM_CHECK) {
@@ -61,21 +60,8 @@ int MPI_Info_create(MPI_Info *info)
         }
     }
 
-    rc = ompi_mpi_instance_retain ();
-    if (OPAL_UNLIKELY(OMPI_SUCCESS != rc)) {
-        /* NTH: seriously, what can we do other than abort () or return? we failed to
-         * set up the most basic infrastructure! */
-        return rc;
-    }
-
-    /*
-     * Call the object create function. This function not only
-     * allocates the space for MPI_Info, but also calls all the
-     * relevant init functions. Should I check if the fortran
-     * handle is valid
-     */
-    (*info) = OBJ_NEW(ompi_info_t);
-    if (NULL == (*info)) {
+    *info = ompi_info_allocate ();
+    if (NULL == *info) {
         return OMPI_ERRHANDLER_INVOKE(MPI_COMM_WORLD, MPI_ERR_NO_MEM,
                                       FUNC_NAME);
     }
