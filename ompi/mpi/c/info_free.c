@@ -70,8 +70,5 @@ int MPI_Info_free(MPI_Info *info)
     OPAL_CR_ENTER_LIBRARY();
 
     err = ompi_info_free(info);
-
-    /* release the retain() from info create/dup */
-    ompi_mpi_instance_release ();
     OMPI_ERRHANDLER_RETURN(err, MPI_COMM_WORLD, err, FUNC_NAME);
 }
