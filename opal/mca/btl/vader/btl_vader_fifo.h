@@ -203,7 +203,9 @@ static inline bool vader_fifo_write_ep (mca_btl_vader_hdr_t *hdr, struct mca_btl
         opal_atomic_wmb ();
         return mca_btl_vader_fbox_sendi (ep, 0xfe, &rhdr, sizeof (rhdr), NULL, 0);
     }
+#if 0
     mca_btl_vader_try_fbox_setup (ep, hdr);
+#endif
     hdr->next = VADER_FIFO_FREE;
     vader_fifo_write (ep->fifo, rhdr);
 
