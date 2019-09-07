@@ -277,6 +277,17 @@ end subroutine PMPI_Comm_create
 
 end interface
 
+interface  PMPI_Comm_create_from_group
+subroutine PMPI_Comm_create_from_group(group, stringtag, info, errhandler, newcomm, ierror)
+   implicit none
+   integer, intent(in) :: group
+   character(len=*), intent(in) :: stringtag
+   integer, intent(in) :: info
+   integer, intent(in) :: errhandler
+   integer, intent(out) :: newcomm
+   integer, intent(out) :: ierror
+end subroutine PMPI_Comm_create_from_group
+end interface
 
 interface PMPI_Comm_create_group
 
@@ -837,6 +848,15 @@ end subroutine PMPI_Group_free
 
 end interface
 
+interface PMPI_Group_from_session_pset
+subroutine PMPI_Group_from_session_pset(session, pset_name, newgroup, ierror)
+   implicit none
+   integer, intent(in) :: session
+   character(len=*), intent(in) :: pset_name
+   integer, intent(out) :: newgroup
+   integer, intent(out) :: ierror
+end subroutine PMPI_Group_from_session_pset
+end interface
 
 interface PMPI_Group_incl
 
@@ -1088,6 +1108,22 @@ end subroutine PMPI_Intercomm_create
 
 end interface
 
+interface PMPI_Intercomm_create_from_groups
+
+subroutine PMPI_Intercomm_create_from_groups(local_group, local_leader, remote_group, remote_leader,
+                                          stringtag, info, errhandler, newintercomm, ierror)
+   implicit none
+   integer, intent(in) :: local_group, remote_group
+   integer, intent(in):: local_leader, remote_leader
+   character(len=*), intent(in) :: stringtag
+   integer, intent(in) :: info
+   integer, intent(in) :: errhandler
+   integer, intent(out) :: newintercomm
+   integer, intent(out) :: ierror
+end subroutine PMPI_Intercomm_create_from_groups_f08
+
+end interface
+
 
 interface PMPI_Intercomm_merge
 
@@ -1259,6 +1295,80 @@ end subroutine PMPI_Request_get_status
 
 end interface
 
+nterface PMPI_Session_get_info
+subroutine PMPI_Session_get_info(session, info, ierror)
+   implicit none
+   integer, intent(in) :: session
+   integer, intent(out) :: info_used
+   integer, intent(out) :: ierror
+end subroutine PMPI_Session_get_info
+end interface
+
+interface PMPI_Session_get_nth_pset
+subroutine PMPI_Session_get_nth_pset(session, n, pset_len, pset_name, ierror)
+   implicit none
+   integer, intent(in) :: session
+   integer, intent(in) :: n
+   integer, intent(in) :: pset_len
+   character(len=*), intent(out) :: pset_name
+   integer, intent(out) :: ierror
+end subroutine PMPI_Session_get_nth_pset
+end interface 
+
+interface PMPI_Session_get_nth_psetlen
+subroutine PMPI_Session_get_nth_psetlen(session, n, pset_len, ierror)
+   implicit none
+   integer, intent(in) :: session
+   integer, intent(in) :: n
+   integer, intent(out) :: pset_len
+   integer, intent(out) :: ierror
+end subroutine PMPI_Session_get_nth_psetlen
+end interface
+
+
+interface PMPI_Session_get_num_psets
+
+subroutine PMPI_Session_get_num_psets(session, npset_names, ierror)
+   implicit none
+   integer, intent(in) :: session
+   integer, intent(out) :: npset_names
+   integer, intent(out) :: ierror
+end subroutine PMPI_Session_get_num_psets
+
+end interface
+
+interface PMPI_Session_get_pset_info
+subroutine PMPI_Session_get_pset_info(session, pset_name, info, ierror)
+   implicit none
+   integer, intent(in) :: session
+   character(len=*), intent(in) :: pset_name
+   integer, intent(out) :: info
+   integer, intent(out) :: ierror
+end subroutine PMPI_Session_get_pset_info
+end interface 
+
+
+interface  PMPI_Session_init
+
+subroutine PMPI_Session_init(info,errhandler,session,ierror)
+   implicit none
+   integer, intent(in) :: info
+   integer, intent(OUT) :: errhandler
+   integer, intent(OUT) :: session
+   integer, intent(OUT) :: ierror
+end subroutine PMPI_Session_init
+
+end interface
+
+interface  PMPI_Session_finalize
+
+subroutine PMPI_Session_finalize(session,ierror)
+   implicit none
+   integer, intent(inout) :: session
+   integer, intent(OUT) :: ierror
+end subroutine PMPI_Session_finalize
+
+end interface
 
 interface PMPI_Start
 

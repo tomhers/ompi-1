@@ -137,6 +137,7 @@ mpi_api_files = \
         comm_connect_f08.F90 \
         comm_create_errhandler_f08.F90 \
         comm_create_f08.F90 \
+        comm_create_from_group_f08.F90 \
         comm_create_group_f08.F90 \
         comm_create_keyval_f08.F90 \
         comm_delete_attr_f08.F90 \
@@ -263,6 +264,7 @@ mpi_api_files = \
         group_difference_f08.F90 \
         group_excl_f08.F90 \
         group_free_f08.F90 \
+        group_from_session_pset_f08.F90 \
         group_incl_f08.F90 \
         group_intersection_f08.F90 \
         group_range_excl_f08.F90 \
@@ -303,6 +305,7 @@ mpi_api_files = \
         initialized_f08.F90 \
         init_thread_f08.F90 \
         intercomm_create_f08.F90 \
+        intercomm_create_from_groups_f08.F90 \
         intercomm_merge_f08.F90 \
         iprobe_f08.F90 \
         irecv_f08.F90 \
@@ -359,6 +362,13 @@ mpi_api_files = \
         send_init_f08.F90 \
         sendrecv_f08.F90 \
         sendrecv_replace_f08.F90 \
+	session_get_info_f08.F90 \
+	session_get_nth_pset_f08.F90 \
+	session_get_nth_psetlen_f08.F90 \
+	session_get_num_psets_f08.F90 \
+	session_get_pset_info_f08.F90 \
+	session_init_f08.F90 \
+	session_finalize_f08.F90 \
         ssend_f08.F90 \
         ssend_init_f08.F90 \
         startall_f08.F90 \
@@ -492,6 +502,7 @@ pmpi_api_files = \
         profile/pcomm_connect_f08.F90 \
         profile/pcomm_create_errhandler_f08.F90 \
         profile/pcomm_create_f08.F90 \
+        profile/pcomm_create_from_group_f08.F90 \
         profile/pcomm_create_group_f08.F90 \
         profile/pcomm_create_keyval_f08.F90 \
         profile/pcomm_delete_attr_f08.F90 \
@@ -618,6 +629,7 @@ pmpi_api_files = \
         profile/pgroup_difference_f08.F90 \
         profile/pgroup_excl_f08.F90 \
         profile/pgroup_free_f08.F90 \
+        profile/pgroup_from_session_pset_f08.F90 \
         profile/pgroup_incl_f08.F90 \
         profile/pgroup_intersection_f08.F90 \
         profile/pgroup_range_excl_f08.F90 \
@@ -658,6 +670,7 @@ pmpi_api_files = \
         profile/pinitialized_f08.F90 \
         profile/pinit_thread_f08.F90 \
         profile/pintercomm_create_f08.F90 \
+        profile/pintercomm_create_from_groups_f08.F90 \
         profile/pintercomm_merge_f08.F90 \
         profile/piprobe_f08.F90 \
         profile/pirecv_f08.F90 \
@@ -714,6 +727,13 @@ pmpi_api_files = \
         profile/psend_init_f08.F90 \
         profile/psendrecv_f08.F90 \
         profile/psendrecv_replace_f08.F90 \
+	profile/psession_get_info_f08.F90 \
+	profile/psession_get_nth_pset_f08.F90 \
+	profile/psession_get_nth_psetlen_f08.F90 \
+	profile/psession_get_num_psets_f08.F90 \
+	profile/psession_get_pset_info_f08.F90 \
+	profile/psession_init_f08.F90 \
+	profile/psession_finalize_f08.F90 \
         profile/pssend_f08.F90 \
         profile/pssend_init_f08.F90 \
         profile/pstartall_f08.F90 \
