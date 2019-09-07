@@ -6,6 +6,8 @@
 ! Copyright (c) 2015-2018 Research Organization for Information Science
 !                         and Technology (RIST). All rights reserved.
 ! Copyright (c) 2018      FUJITSU LIMITED.  All rights reserved.
+! Copyright (c) 2019      Triad National Security, LLC. All rights
+!                         reserved.
 ! $COPYRIGHT$
 !
 ! This file creates mappings between MPI C types (e.g., MPI_Comm) and
@@ -65,6 +67,10 @@ module mpi_f08_types
    type, BIND(C) :: MPI_Win
       integer :: MPI_VAL
    end type MPI_Win
+
+   type, BIND(C) :: MPI_Session
+      integer :: MPI_VAL
+   end type MPI_Session
 
    type, BIND(C) :: MPI_Status
       integer :: MPI_SOURCE
