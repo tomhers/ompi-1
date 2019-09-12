@@ -10,6 +10,8 @@
 ! Copyright (c) 2015-2017 Research Organization for Information Science
 !                         and Technology (RIST). All rights reserved.
 ! Copyright (c) 2017-2018 FUJITSU LIMITED.  All rights reserved.
+! Copyright (c) 2019      Triad National Security, LLC. All rights
+!                         reserved.
 ! $COPYRIGHT$
 !
 ! This file provides the interface specifications for the MPI Fortran
@@ -377,6 +379,80 @@ subroutine MPI_Send_init_f08(buf,count,datatype,dest,tag,comm,request,ierror)
    INTEGER, OPTIONAL, INTENT(OUT) :: ierror
 end subroutine MPI_Send_init_f08
 end interface  MPI_Send_init
+
+interface MPI_Session_get_info
+subroutine MPI_Session_get_info_f08(session, info, ierror)
+   use :: mpi_f08_types, only : MPI_Session, MPI_Info
+   implicit none
+   TYPE(MPI_Session), INTENT(IN) :: session
+   TYPE(MPI_Info), INTENT(OUT) :: info
+   INTEGER, OPTIONAL, INTENT(OUT) :: ierror
+end subroutine MPI_Session_get_info_f08
+end interface MPI_Session_get_info
+
+interface MPI_Session_get_nth_pset
+subroutine MPI_Session_get_nth_pset_f08(session, n, pset_len, pset_name, ierror)
+   use :: mpi_f08_types, only : MPI_Session
+   implicit none
+   TYPE(MPI_Session), INTENT(IN) :: session
+   INTEGER, INTENT(IN) :: n
+   INTEGER, INTENT(IN) :: pset_len
+   CHARACTER(LEN=*), INTENT(OUT) :: pset_name
+   INTEGER, OPTIONAL, INTENT(OUT) :: ierror
+end subroutine MPI_Session_get_nth_pset_f08
+end interface MPI_Session_get_nth_pset
+
+interface MPI_Session_get_nth_psetlen
+subroutine MPI_Session_get_nth_psetlen_f08(session, n, pset_len, ierror)
+   use :: mpi_f08_types, only : MPI_Session
+   implicit none
+   TYPE(MPI_Session), INTENT(IN) :: session
+   INTEGER, INTENT(IN) :: n
+   INTEGER, INTENT(OUT) :: pset_len
+   INTEGER, OPTIONAL, INTENT(OUT) :: ierror
+end subroutine MPI_Session_get_nth_psetlen_f08
+end interface MPI_Session_get_nth_psetlen
+
+interface MPI_Session_get_num_psets
+subroutine MPI_Session_get_num_psets_f08(session, npset_names, ierror)
+   use :: mpi_f08_types, only : MPI_Session
+   implicit none
+   TYPE(MPI_Session), INTENT(IN) :: session
+   INTEGER, INTENT(OUT) :: npset_names
+   INTEGER, OPTIONAL, INTENT(OUT) :: ierror
+end subroutine MPI_Session_get_num_psets_f08
+end interface  MPI_Session_get_num_psets
+
+interface MPI_Session_get_pset_info
+subroutine MPI_Session_get_pset_info_f08(session, pset_name, info, ierror)
+   use :: mpi_f08_types, only : MPI_Session, MPI_Info
+   implicit none
+   TYPE(MPI_Session), INTENT(IN) :: session
+   CHARACTER(LEN=*), INTENT(IN) :: pset_name
+   TYPE(MPI_Info), INTENT(OUT) :: info
+   INTEGER, OPTIONAL, INTENT(OUT) :: ierror
+end subroutine MPI_Session_get_pset_info_f08
+end interface MPI_Session_get_pset_info
+
+interface  MPI_Session_init
+subroutine MPI_Session_init_f08(info,errhandler,session,ierror)
+   use :: mpi_f08_types, only : MPI_Session, MPI_Info, MPI_Errhandler
+   implicit none
+   TYPE(MPI_Info), INTENT(IN) :: info
+   TYPE(MPI_Errhandler), INTENT(OUT) :: errhandler
+   TYPE(MPI_Session), INTENT(OUT) :: session
+   INTEGER, OPTIONAL, INTENT(OUT) :: ierror
+end subroutine MPI_Session_init_f08
+end interface  MPI_Session_init
+
+interface  MPI_Session_finalize
+subroutine MPI_Session_finalize_f08(session,ierror)
+   use :: mpi_f08_types, only : MPI_Session
+   implicit none
+   TYPE(MPI_Session), INTENT(INOUT) :: session
+   INTEGER, OPTIONAL, INTENT(OUT) :: ierror
+end subroutine MPI_Session_finalize_f08
+end interface  MPI_Session_finalize
 
 interface  MPI_Ssend
 subroutine MPI_Ssend_f08(buf,count,datatype,dest,tag,comm,ierror)
@@ -1656,6 +1732,20 @@ subroutine MPI_Comm_create_f08(comm,group,newcomm,ierror)
 end subroutine MPI_Comm_create_f08
 end interface  MPI_Comm_create
 
+interface  MPI_Comm_create_from_group
+subroutine MPI_Comm_create_from_group_f08(group, stringtag, info, errhandler, newcomm, ierror)
+   use :: mpi_f08_types, only : MPI_Comm, MPI_Group, MPI_Info, MPI_Errhandler
+   implicit none
+   TYPE(MPI_Group), INTENT(IN) :: group
+   CHARACTER(LEN=*), INTENT(IN) :: stringtag
+   TYPE(MPI_Info), INTENT(IN) :: info
+   TYPE(MPI_Errhandler), INTENT(IN) :: errhandler
+   TYPE(MPI_Comm), INTENT(OUT) :: newcomm
+   INTEGER, OPTIONAL, INTENT(OUT) :: ierror
+
+end subroutine MPI_Comm_create_from_group_f08
+end interface  MPI_Comm_create_from_group
+
 interface  MPI_Comm_create_group
 subroutine MPI_Comm_create_group_f08(comm,group,tag,newcomm,ierror)
    use :: mpi_f08_types, only : MPI_Comm, MPI_Group
@@ -1917,6 +2007,17 @@ subroutine MPI_Group_free_f08(group,ierror)
 end subroutine MPI_Group_free_f08
 end interface  MPI_Group_free
 
+interface MPI_Group_from_session_pset
+subroutine MPI_Group_from_session_pset_f08(session, pset_name, newgroup, ierror)
+   use :: mpi_f08_types, only : MPI_Session, MPI_Group
+   implicit none
+   TYPE(MPI_Session), INTENT(IN) :: session
+   CHARACTER(LEN=*), INTENT(IN) :: pset_name
+   TYPE(MPI_Group), INTENT(OUT) :: newgroup
+   INTEGER, OPTIONAL, INTENT(OUT) :: ierror
+end subroutine MPI_Group_from_session_pset_f08
+end interface MPI_Group_from_session_pset
+
 interface  MPI_Group_incl
 subroutine MPI_Group_incl_f08(group,n,ranks,newgroup,ierror)
    use :: mpi_f08_types, only : MPI_Group
@@ -2013,6 +2114,21 @@ subroutine MPI_Intercomm_create_f08(local_comm,local_leader,peer_comm,remote_lea
    INTEGER, OPTIONAL, INTENT(OUT) :: ierror
 end subroutine MPI_Intercomm_create_f08
 end interface  MPI_Intercomm_create
+
+interface MPI_Intercomm_create_from_groups
+subroutine MPI_Intercomm_create_from_groups_f08(local_group, local_leader, remote_group, remote_leader, &
+                                          stringtag, info, errhandler, newintercomm, ierror)
+   use :: mpi_f08_types, only : MPI_Comm, MPI_Group, MPI_Errhandler, MPI_Info
+   implicit none
+   TYPE(MPI_Group), INTENT(IN) :: local_group, remote_group
+   INTEGER, INTENT(IN):: local_leader, remote_leader
+   CHARACTER(LEN=*), INTENT(IN) :: stringtag
+   TYPE(MPI_Info), INTENT(IN) :: info
+   TYPE(MPI_Errhandler), INTENT(IN) :: errhandler
+   TYPE(MPI_Comm), INTENT(OUT) :: newintercomm
+   INTEGER, OPTIONAL, INTENT(OUT) :: ierror
+end subroutine MPI_Intercomm_create_from_groups_f08
+end interface MPI_Intercomm_create_from_groups
 
 interface  MPI_Intercomm_merge
 subroutine MPI_Intercomm_merge_f08(intercomm,high,newintracomm,ierror)
