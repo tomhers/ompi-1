@@ -406,7 +406,7 @@ subroutine PMPI_Session_init_f08(info,errhandler,session,ierror)
    use :: mpi_f08_types, only : MPI_Session, MPI_Info, MPI_Errhandler
    implicit none
    TYPE(MPI_Info), INTENT(IN) :: info
-   TYPE(MPI_Errhandler), INTENT(OUT) :: errhandler
+   TYPE(MPI_Errhandler), INTENT(IN) :: errhandler
    TYPE(MPI_Session), INTENT(OUT) :: session
    INTEGER, OPTIONAL, INTENT(OUT) :: ierror
 end subroutine PMPI_Session_init_f08
