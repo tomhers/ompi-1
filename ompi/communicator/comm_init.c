@@ -168,6 +168,9 @@ int ompi_comm_init(void)
     /* initialize communicator requests (for ompi_comm_idup) */
     ompi_comm_request_init ();
 
+    /* get a reference on the attributes subsys */
+    ompi_attr_get_ref();
+
     ompi_mpi_instance_append_finalize (ompi_comm_finalize);
 
     return OMPI_SUCCESS;
@@ -269,6 +272,11 @@ int ompi_comm_init_mpi3 (void)
        MPI_COMM_SELF, the keyhash will automatically be created. */
     ompi_mpi_comm_self.comm.c_keyhash = NULL;
 
+    /*
+     * finally here we set the predefined attribute keyvals
+     */
+    ompi_attr_create_predefined();
+
     OBJ_RETAIN(&ompi_mpi_errors_are_fatal.eh);
 
     return OMPI_SUCCESS;
@@ -303,7 +311,7 @@ ompi_communicator_t *ompi_comm_allocate ( int local_size, int remote_size )
 
 static int ompi_comm_finalize (void)
 {
-    int max, i;
+    int max, i, ret = OMPI_SUCCESS;
     ompi_communicator_t *comm;
 
     /* disconnect all dynamic communicators */
@@ -396,7 +404,10 @@ static int ompi_comm_finalize (void)
     /* finalize communicator requests */
     ompi_comm_request_fini ();
 
-    return OMPI_SUCCESS;
+    /* release a reference to the attributes subsys */
+    ret = ompi_attr_put_ref();
+
+    return ret;
 }
 
 /********************************************************************************/
