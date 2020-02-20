@@ -1309,22 +1309,11 @@ subroutine PMPI_Session_get_nth_pset(session, n, pset_len, pset_name, ierror)
    implicit none
    integer, intent(in) :: session
    integer, intent(in) :: n
-   integer, intent(in) :: pset_len
+   integer, intent(inout) :: pset_len
    character(len=*), intent(out) :: pset_name
    integer, intent(out) :: ierror
 end subroutine PMPI_Session_get_nth_pset
 end interface 
-
-interface PMPI_Session_get_nth_psetlen
-subroutine PMPI_Session_get_nth_psetlen(session, n, pset_len, ierror)
-   implicit none
-   integer, intent(in) :: session
-   integer, intent(in) :: n
-   integer, intent(out) :: pset_len
-   integer, intent(out) :: ierror
-end subroutine PMPI_Session_get_nth_psetlen
-end interface
-
 
 interface PMPI_Session_get_num_psets
 
