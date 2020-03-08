@@ -391,33 +391,24 @@ end subroutine MPI_Session_get_info_f08
 end interface MPI_Session_get_info
 
 interface MPI_Session_get_nth_pset
-subroutine MPI_Session_get_nth_pset_f08(session, n, pset_len, pset_name, ierror)
-   use :: mpi_f08_types, only : MPI_Session
+subroutine MPI_Session_get_nth_pset_f08(session, info, n, pset_len, pset_name, ierror)
+   use :: mpi_f08_types, only : MPI_Session, MPI_Info
    implicit none
    TYPE(MPI_Session), INTENT(IN) :: session
+   TYPE(MPI_Info), INTENT(IN) :: info
    INTEGER, INTENT(IN) :: n
-   INTEGER, INTENT(IN) :: pset_len
+   INTEGER, INTENT(INOUT) :: pset_len
    CHARACTER(LEN=*), INTENT(OUT) :: pset_name
    INTEGER, OPTIONAL, INTENT(OUT) :: ierror
 end subroutine MPI_Session_get_nth_pset_f08
 end interface MPI_Session_get_nth_pset
 
-interface MPI_Session_get_nth_psetlen
-subroutine MPI_Session_get_nth_psetlen_f08(session, n, pset_len, ierror)
-   use :: mpi_f08_types, only : MPI_Session
-   implicit none
-   TYPE(MPI_Session), INTENT(IN) :: session
-   INTEGER, INTENT(IN) :: n
-   INTEGER, INTENT(OUT) :: pset_len
-   INTEGER, OPTIONAL, INTENT(OUT) :: ierror
-end subroutine MPI_Session_get_nth_psetlen_f08
-end interface MPI_Session_get_nth_psetlen
-
 interface MPI_Session_get_num_psets
-subroutine MPI_Session_get_num_psets_f08(session, npset_names, ierror)
-   use :: mpi_f08_types, only : MPI_Session
+subroutine MPI_Session_get_num_psets_f08(session, info, npset_names, ierror)
+   use :: mpi_f08_types, only : MPI_Session, MPI_Info
    implicit none
    TYPE(MPI_Session), INTENT(IN) :: session
+   TYPE(MPI_Info), INTENT(IN) :: info
    INTEGER, INTENT(OUT) :: npset_names
    INTEGER, OPTIONAL, INTENT(OUT) :: ierror
 end subroutine MPI_Session_get_num_psets_f08
