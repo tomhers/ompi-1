@@ -1110,7 +1110,7 @@ end interface
 
 interface PMPI_Intercomm_create_from_groups
 
-subroutine PMPI_Intercomm_create_from_groups(local_group, local_leader, remote_group, remote_leader,
+subroutine PMPI_Intercomm_create_from_groups(local_group, local_leader, remote_group, remote_leader, &
                                           stringtag, info, errhandler, newintercomm, ierror)
    implicit none
    integer, intent(in) :: local_group, remote_group
@@ -1120,7 +1120,7 @@ subroutine PMPI_Intercomm_create_from_groups(local_group, local_leader, remote_g
    integer, intent(in) :: errhandler
    integer, intent(out) :: newintercomm
    integer, intent(out) :: ierror
-end subroutine PMPI_Intercomm_create_from_groups_f08
+end subroutine PMPI_Intercomm_create_from_groups
 
 end interface
 
@@ -1295,11 +1295,11 @@ end subroutine PMPI_Request_get_status
 
 end interface
 
-nterface PMPI_Session_get_info
+interface PMPI_Session_get_info
 subroutine PMPI_Session_get_info(session, info, ierror)
    implicit none
    integer, intent(in) :: session
-   integer, intent(out) :: info_used
+   integer, intent(out) :: info
    integer, intent(out) :: ierror
 end subroutine PMPI_Session_get_info
 end interface
