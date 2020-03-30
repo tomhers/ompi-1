@@ -1295,7 +1295,7 @@ end subroutine PMPI_Request_get_status
 
 end interface
 
-interface PMPI_Session_get_info
+interface
 subroutine PMPI_Session_get_info(session, info, ierror)
    implicit none
    integer, intent(in) :: session
@@ -1304,10 +1304,11 @@ subroutine PMPI_Session_get_info(session, info, ierror)
 end subroutine PMPI_Session_get_info
 end interface
 
-interface PMPI_Session_get_nth_pset
-subroutine PMPI_Session_get_nth_pset(session, n, pset_len, pset_name, ierror)
+interface
+subroutine PMPI_Session_get_nth_pset(session, info, n, pset_len, pset_name, ierror)
    implicit none
    integer, intent(in) :: session
+   integer, intent(in) :: info
    integer, intent(in) :: n
    integer, intent(inout) :: pset_len
    character(len=*), intent(out) :: pset_name
@@ -1317,9 +1318,10 @@ end interface
 
 interface PMPI_Session_get_num_psets
 
-subroutine PMPI_Session_get_num_psets(session, npset_names, ierror)
+subroutine PMPI_Session_get_num_psets(session, info, npset_names, ierror)
    implicit none
    integer, intent(in) :: session
+   integer, intent(in) :: info
    integer, intent(out) :: npset_names
    integer, intent(out) :: ierror
 end subroutine PMPI_Session_get_num_psets
@@ -1342,7 +1344,7 @@ interface  PMPI_Session_init
 subroutine PMPI_Session_init(info,errhandler,session,ierror)
    implicit none
    integer, intent(in) :: info
-   integer, intent(OUT) :: errhandler
+   integer, intent(in) :: errhandler
    integer, intent(OUT) :: session
    integer, intent(OUT) :: ierror
 end subroutine PMPI_Session_init
