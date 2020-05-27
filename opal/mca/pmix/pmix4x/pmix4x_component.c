@@ -25,6 +25,9 @@
 #include "opal/mca/pmix/pmix.h"
 #include "pmix4x.h"
 
+#include <pmix_common.h>
+#include <pmix.h>
+
 /*
  * Public string showing the pmix external component version number
  */
