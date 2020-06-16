@@ -563,6 +563,7 @@ int ompi_rte_init(int *pargc, char ***pargv)
     }
 
     /* get our local rank from PMIx */
+    fprintf(stderr, "trying to get local rank\n");
     OPAL_MODEX_RECV_VALUE_OPTIONAL(rc, PMIX_LOCAL_RANK,
                                    &opal_process_info.my_name, &u16ptr, PMIX_UINT16);
     if (PMIX_SUCCESS != rc) {
@@ -578,6 +579,7 @@ int ompi_rte_init(int *pargc, char ***pargv)
     opal_process_info.my_local_rank = u16;
 
     /* get our node rank from PMIx */
+    fprintf(stderr, "trying to get node rank\n");
     OPAL_MODEX_RECV_VALUE_OPTIONAL(rc, PMIX_NODE_RANK,
                                    &opal_process_info.my_name, &u16ptr, PMIX_UINT16);
     if (PMIX_SUCCESS != rc) {
@@ -593,6 +595,7 @@ int ompi_rte_init(int *pargc, char ***pargv)
     opal_process_info.my_node_rank = u16;
 
     /* get job size */
+    fprintf(stderr, "trying to get job size\n");
     pname.jobid = opal_process_info.my_name.jobid;
     pname.vpid = OPAL_VPID_WILDCARD;
     OPAL_MODEX_RECV_VALUE_OPTIONAL(rc, PMIX_JOB_SIZE,
@@ -610,6 +613,7 @@ int ompi_rte_init(int *pargc, char ***pargv)
     opal_process_info.num_procs = u32;
 
     /* get universe size */
+    fprintf(stderr, "trying to get niverse size\n");
     OPAL_MODEX_RECV_VALUE_OPTIONAL(rc, PMIX_UNIV_SIZE,
                                    &pname, &u32ptr, PMIX_UINT32);
     if (PMIX_SUCCESS != rc) {
@@ -626,6 +630,7 @@ int ompi_rte_init(int *pargc, char ***pargv)
     /* get number of app contexts */
     pname.jobid = opal_process_info.my_name.jobid;
     pname.vpid = OPAL_VPID_WILDCARD;
+    fprintf(stderr, "trying to get num apps size\n");
     OPAL_MODEX_RECV_VALUE_OPTIONAL(rc, PMIX_JOB_NUM_APPS,
                                    &pname, &u32ptr, PMIX_UINT32);
     if (PMIX_SUCCESS == rc) {
@@ -685,6 +690,7 @@ int ompi_rte_init(int *pargc, char ***pargv)
 
     /* get the number of local peers - required for wireup of
      * shared memory BTL, defaults to local node */
+    fprintf(stderr, "get the PMIX_LOCAL_SIZE again\n");
     OPAL_MODEX_RECV_VALUE_OPTIONAL(rc, PMIX_LOCAL_SIZE,
                                    &pname, &u32ptr, PMIX_UINT32);
     if (PMIX_SUCCESS == rc) {
@@ -696,6 +702,7 @@ int ompi_rte_init(int *pargc, char ***pargv)
     }
 
     /* retrieve temp directories info */
+    fprintf(stderr, "get the PMIX_TMPDIR again\n");
     OPAL_MODEX_RECV_VALUE_OPTIONAL(rc, PMIX_TMPDIR, &pname, &val, PMIX_STRING);
     if (OPAL_SUCCESS == rc && NULL != val) {
         opal_process_info.top_session_dir = val;
@@ -764,6 +771,7 @@ int ompi_rte_init(int *pargc, char ***pargv)
             goto error;
         }
         /* retrieve the local peers - defaults to local node */
+        fprintf(stderr, "get the local peers\n");
         OPAL_MODEX_RECV_VALUE(rc, PMIX_LOCAL_PEERS,
                               &pname, &val, PMIX_STRING);
         if (PMIX_SUCCESS == rc && NULL != val) {
