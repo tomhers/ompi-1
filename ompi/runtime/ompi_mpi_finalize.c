@@ -103,8 +103,6 @@ static void fence_cbfunc(pmix_status_t status, void *cbdata)
 int ompi_mpi_finalize(void)
 {
     int ret = MPI_SUCCESS;
-    volatile bool active;
-    uint32_t key;
     pmix_status_t rc;
 
     ompi_hook_base_mpi_finalize_top();
@@ -238,7 +236,7 @@ int ompi_mpi_finalize(void)
        more details). */
     if (!ompi_async_mpi_finalize && !ompi_singleton) {
 #ifdef PMIx_Fence_nb
-        active = true;
+        volatile bool active = true;
         OPAL_POST_OBJECT(&active);
         /* Note that use of the non-blocking PMIx fence will
          * allow us to lazily cycle calling
